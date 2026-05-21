@@ -87,7 +87,7 @@ Prediction target:
 Open terminal in project folder:
 
 ```bash
-cd "E:\Project 5590\5785-Kafka\5785-Kafka"
+cd "..\5785-Kafka"
 
 Compile project:
 
@@ -173,7 +173,7 @@ STEP 5 — Run Streams Processor
 
 Open terminal in project folder:
 
-cd "E:\Project 5590\5785-Kafka\5785-Kafka"
+cd "..\5785-Kafka"
 
 Run:
 
@@ -197,7 +197,7 @@ STEP 6 — Run Prediction Consumer
 
 Open another terminal in project folder:
 
-cd "E:\Project 5590\5785-Kafka\5785-Kafka"
+cd "..\5785-Kafka"
 
 Run:
 
@@ -217,7 +217,7 @@ STEP 7 — Run Dataset Producer
 
 Open another terminal in project folder:
 
-cd "E:\Project 5590\5785-Kafka\5785-Kafka"
+cd "..\5785-Kafka"
 
 Run:
 
