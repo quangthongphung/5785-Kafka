@@ -2,13 +2,7 @@
 
 ## Overview
 
-This project demonstrates a real-time machine learning streaming pipeline using:
-
-- Apache Kafka
-- Kafka Streams
-- Java
-- Maven
-- Weka Machine Learning
+This project demonstrates a real-time machine learning streaming pipeline using Apache Kafka, Kafka Streams, Java, Maven, and Weka.
 
 The application reads rows from the Bike Sharing dataset, streams them through Kafka, predicts bike rental counts using a trained machine learning model, and outputs predictions in real time.
 
@@ -16,93 +10,99 @@ The application reads rows from the Bike Sharing dataset, streams them through K
 
 # System Architecture
 
-```text
-DatasetProducer
-        ↓
-   raw-data topic
-        ↓
- StreamsProcessor
-(Kafka Streams + ML Model)
-        ↓
- predictions topic
-        ↓
+DatasetProducer  
+↓  
+raw-data topic  
+↓  
+StreamsProcessor (Kafka Streams + ML Model)  
+↓  
+predictions topic  
+↓  
 PredictionConsumer
 
-Dataset
+---
+
+# Dataset
 
 Dataset used:
 
 Bike Sharing Dataset (UCI Machine Learning Repository)
 
 Source:
+
 https://archive.ics.uci.edu/dataset/275/bike+sharing+dataset
 
 File used:
 
 data/hour.csv
 
-Machine Learning Model
+Features used:
 
-Model Type:
+- temp
+- hum
+- windspeed
 
-Linear Regression
+Prediction target:
 
-Input Features:
+- cnt
 
-temp
-hum
-windspeed
+---
 
-Prediction Target:
+# Technologies Used
 
-cnt
+- Java
+- Maven
+- Apache Kafka
+- Kafka Streams API
+- Weka
+- Jackson JSON
 
-The ML model is trained offline using Weka and saved as:
+---
 
-model/bike-model.model
-Technologies Used
-Java
-Maven
-Apache Kafka
-Kafka Streams API
-Weka
-Jackson JSON
-Project Structure
+# Project Structure
+
 5785-Kafka/
-│
-├── data/
-│   └── hour.csv
-│
-├── model/
-│   └── bike-model.model
-│
-├── src/
-│   └── main/java/com/example/
-│       ├── TrainModel.java
-│       ├── DatasetProducer.java
-│       ├── StreamsProcessor.java
-│       └── PredictionConsumer.java
-│
-├── pom.xml
-└── README.md
-Kafka Topics
 
-This project uses two Kafka topics:
+├── data/  
+│   └── hour.csv  
 
-raw-data
-predictions
-Build Instructions
-Step 1: Open Project Folder
+├── model/  
+│   └── bike-model.model  
+
+├── src/  
+│   └── main/java/com/example/  
+│       ├── TrainModel.java  
+│       ├── DatasetProducer.java  
+│       ├── StreamsProcessor.java  
+│       └── PredictionConsumer.java  
+
+├── pom.xml  
+
+└── README.md  
+
+---
+
+# STEP 1 — Build Project
+
+Open terminal in project folder:
+
+```bash
 cd "E:\Project 5590\5785-Kafka\5785-Kafka"
-Step 2: Compile Project
+
+Compile project:
+
 mvn clean compile
 
 If Maven is not added to PATH:
 
 "C:\Maven\apache-maven-3.9.16\bin\mvn.cmd" clean compile
-Train the ML Model
 
-Run:
+Expected output:
+
+BUILD SUCCESS
+STEP 2 — Train the Machine Learning Model
+
+Run TrainModel.java:
 
 mvn exec:java "-Dexec.mainClass=com.example.TrainModel"
 
@@ -110,23 +110,48 @@ Or:
 
 "C:\Maven\apache-maven-3.9.16\bin\mvn.cmd" exec:java "-Dexec.mainClass=com.example.TrainModel"
 
-After training, the model file will be created:
+Expected output:
+
+Model trained with temp, hum, windspeed -> cnt
+
+This creates:
 
 model/bike-model.model
-Kafka Setup
-Start Kafka Server
+
+The model is trained offline using:
+
+temp
+hum
+windspeed
+
+to predict:
+
+cnt
+STEP 3 — Start Kafka Server
 
 Go to Kafka folder:
 
 cd C:\Kafka\kafka_2.13-4.2.0
 
-Start Kafka:
+Generate random UUID:
+
+.\bin\windows\kafka-storage.bat random-uuid
+
+Example output:
+
+s5ZjyWbfT46LFWH2oUBY4g
+
+Format Kafka storage:
+
+.\bin\windows\kafka-storage.bat format --standalone -t s5ZjyWbfT46LFWH2oUBY4g -c config\server.properties
+
+Start Kafka server:
 
 .\bin\windows\kafka-server-start.bat config\server.properties
 
-Keep this terminal running.
+Keep this terminal open.
 
-Create Kafka Topics
+STEP 4 — Create Kafka Topics
 
 Create raw-data topic:
 
@@ -144,11 +169,14 @@ Expected output:
 
 raw-data
 predictions
-Running the Application
+STEP 5 — Run Streams Processor
 
-Run the components in this exact order.
+Open terminal in project folder:
 
-Terminal 1 — Streams Processor
+cd "E:\Project 5590\5785-Kafka\5785-Kafka"
+
+Run:
+
 mvn exec:java "-Dexec.mainClass=com.example.StreamsProcessor"
 
 Or:
@@ -158,9 +186,21 @@ Or:
 Expected output:
 
 Streams Processor started...
-RAW MESSAGE:
-Prediction generated:
-Terminal 2 — Prediction Consumer
+
+The Streams Processor:
+
+reads data from raw-data topic
+loads the trained ML model
+predicts bike rental counts
+sends predictions to predictions topic
+STEP 6 — Run Prediction Consumer
+
+Open another terminal in project folder:
+
+cd "E:\Project 5590\5785-Kafka\5785-Kafka"
+
+Run:
+
 mvn exec:java "-Dexec.mainClass=com.example.PredictionConsumer"
 
 Or:
@@ -170,8 +210,17 @@ Or:
 Expected output:
 
 Prediction Consumer started...
-Prediction received:
-Terminal 3 — Dataset Producer
+
+The consumer continuously reads prediction results from the predictions topic.
+
+STEP 7 — Run Dataset Producer
+
+Open another terminal in project folder:
+
+cd "E:\Project 5590\5785-Kafka\5785-Kafka"
+
+Run:
+
 mvn exec:java "-Dexec.mainClass=com.example.DatasetProducer"
 
 Or:
@@ -180,12 +229,15 @@ Or:
 
 Expected output:
 
-Sent: {"temp":"0.24","hum":"0.81", ...}
+Sent: {"temp":"0.24","hum":"0.81","windspeed":"0.0"}
+
+The producer continuously sends dataset rows to Kafka in real time.
+
 Correct Execution Order
-1. Kafka Server
-2. StreamsProcessor
-3. PredictionConsumer
-4. DatasetProducer
+Kafka Server
+StreamsProcessor
+PredictionConsumer
+DatasetProducer
 Example Output
 Producer
 Sent: {"temp":"0.24","hum":"0.81","windspeed":"0.0"}
@@ -204,8 +256,25 @@ This project uses a regression model, so F1-score is not directly applicable.
 
 Regression evaluation metrics:
 
-Correlation Coefficient: add your value
-MAE: add your value
-RMSE: add your value
+Correlation Coefficient
+MAE
+RMSE
 
 F1-score is commonly used for classification tasks, while this project predicts a continuous numeric value.
+
+Video Demo
+
+Add your YouTube / Google Drive / OneDrive video link here.
+
+The demo video shows:
+
+Kafka server startup
+Streams processor running
+Prediction consumer running
+Dataset producer sending live records
+Real-time predictions appearing
+Conclusion
+
+This project successfully demonstrates a complete real-time machine learning streaming pipeline using Apache Kafka and Kafka Streams.
+
+The system continuously streams dataset records, processes them with a machine learning model, and publishes prediction results in real time.
