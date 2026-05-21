@@ -1,6 +1,6 @@
 # Real-Time ML Streaming with Apache Kafka
 
-## Overview
+# Overview
 
 This project demonstrates a real-time machine learning streaming pipeline using Apache Kafka, Kafka Streams, Java, Maven, and Weka.
 
@@ -88,18 +88,25 @@ Open terminal in project folder:
 
 ```bash
 cd "..\5785-Kafka"
+```
 
 Compile project:
 
+```bash
 mvn clean compile
+```
 
 If Maven is not added to PATH:
 
+```bash
 "C:\Maven\apache-maven-3.9.16\bin\mvn.cmd" clean compile
+```
 
 Expected output:
 
+```text
 BUILD SUCCESS
+```
 
 ---
 
@@ -107,174 +114,265 @@ BUILD SUCCESS
 
 Run TrainModel.java:
 
+```bash
 mvn exec:java "-Dexec.mainClass=com.example.TrainModel"
+```
 
 Or:
 
+```bash
 "C:\Maven\apache-maven-3.9.16\bin\mvn.cmd" exec:java "-Dexec.mainClass=com.example.TrainModel"
+```
 
 Expected output:
 
+```text
 Model trained with temp, hum, windspeed -> cnt
+```
 
 This creates:
 
+```text
 model/bike-model.model
+```
 
 The model is trained offline using:
 
-temp
-hum
-windspeed
+- temp
+- hum
+- windspeed
 
 to predict:
 
-cnt
-STEP 3 — Start Kafka Server
+- cnt
+
+---
+
+# STEP 3 — Start Kafka Server
 
 Go to Kafka folder:
 
+```bash
 cd C:\Kafka\kafka_2.13-4.2.0
+```
 
 Generate random UUID:
 
+```bash
 .\bin\windows\kafka-storage.bat random-uuid
+```
 
 Example output:
 
+```text
 s5ZjyWbfT46LFWH2oUBY4g
+```
 
 Format Kafka storage:
 
+```bash
 .\bin\windows\kafka-storage.bat format --standalone -t s5ZjyWbfT46LFWH2oUBY4g -c config\server.properties
+```
 
 Start Kafka server:
 
+```bash
 .\bin\windows\kafka-server-start.bat config\server.properties
+```
 
 Keep this terminal open.
 
-STEP 4 — Create Kafka Topics
+---
+
+# STEP 4 — Create Kafka Topics
 
 Create raw-data topic:
 
+```bash
 .\bin\windows\kafka-topics.bat --create --topic raw-data --bootstrap-server localhost:9092
+```
 
 Create predictions topic:
 
+```bash
 .\bin\windows\kafka-topics.bat --create --topic predictions --bootstrap-server localhost:9092
+```
 
 List topics:
 
+```bash
 .\bin\windows\kafka-topics.bat --list --bootstrap-server localhost:9092
+```
 
 Expected output:
 
+```text
 raw-data
 predictions
-STEP 5 — Run Streams Processor
+```
+
+---
+
+# STEP 5 — Run Streams Processor
 
 Open terminal in project folder:
 
+```bash
 cd "..\5785-Kafka"
+```
 
 Run:
 
+```bash
 mvn exec:java "-Dexec.mainClass=com.example.StreamsProcessor"
+```
 
 Or:
 
+```bash
 "C:\Maven\apache-maven-3.9.16\bin\mvn.cmd" exec:java "-Dexec.mainClass=com.example.StreamsProcessor"
+```
 
 Expected output:
 
+```text
 Streams Processor started...
+```
 
 The Streams Processor:
 
-reads data from raw-data topic
-loads the trained ML model
-predicts bike rental counts
-sends predictions to predictions topic
-STEP 6 — Run Prediction Consumer
+- reads data from raw-data topic
+- loads the trained ML model
+- predicts bike rental counts
+- sends predictions to predictions topic
+
+---
+
+# STEP 6 — Run Prediction Consumer
 
 Open another terminal in project folder:
 
+```bash
 cd "..\5785-Kafka"
+```
 
 Run:
 
+```bash
 mvn exec:java "-Dexec.mainClass=com.example.PredictionConsumer"
+```
 
 Or:
 
+```bash
 "C:\Maven\apache-maven-3.9.16\bin\mvn.cmd" exec:java "-Dexec.mainClass=com.example.PredictionConsumer"
+```
 
 Expected output:
 
+```text
 Prediction Consumer started...
+```
 
 The consumer continuously reads prediction results from the predictions topic.
 
-STEP 7 — Run Dataset Producer
+---
+
+# STEP 7 — Run Dataset Producer
 
 Open another terminal in project folder:
 
+```bash
 cd "..\5785-Kafka"
+```
 
 Run:
 
+```bash
 mvn exec:java "-Dexec.mainClass=com.example.DatasetProducer"
+```
 
 Or:
 
+```bash
 "C:\Maven\apache-maven-3.9.16\bin\mvn.cmd" exec:java "-Dexec.mainClass=com.example.DatasetProducer"
+```
 
 Expected output:
 
+```text
 Sent: {"temp":"0.24","hum":"0.81","windspeed":"0.0"}
+```
 
 The producer continuously sends dataset rows to Kafka in real time.
 
-Correct Execution Order
-Kafka Server
-StreamsProcessor
-PredictionConsumer
-DatasetProducer
-Example Output
-Producer
+---
+
+# Correct Execution Order
+
+1. Kafka Server
+2. StreamsProcessor
+3. PredictionConsumer
+4. DatasetProducer
+
+---
+
+# Example Output
+
+## Producer
+
+```text
 Sent: {"temp":"0.24","hum":"0.81","windspeed":"0.0"}
-Streams Processor
+```
+
+## Streams Processor
+
+```text
 RAW MESSAGE:
 {"temp":"0.24","hum":"0.81","windspeed":"0.0"}
 
 Prediction generated:
 {"predicted_count": 52.3}
-Prediction Consumer
+```
+
+## Prediction Consumer
+
+```text
 Prediction received:
 {"predicted_count": 52.3}
-Model Evaluation
+```
+
+---
+
+# Model Evaluation
 
 This project uses a regression model, so F1-score is not directly applicable.
 
 Regression evaluation metrics:
 
-Correlation Coefficient
-MAE
-RMSE
+- Correlation Coefficient
+- MAE
+- RMSE
 
 F1-score is commonly used for classification tasks, while this project predicts a continuous numeric value.
 
-Video Demo
+---
+
+# Video Demo
+
+
 
 The demo video shows: https://drive.google.com/file/d/16wqGeg_AmZUSmnNYKDbOQldLUcI-dbvU/view?usp=sharing
 
-Kafka server startup
-Streams processor running
-Prediction consumer running
-Dataset producer sending live records
-Real-time predictions appearing
-Conclusion
+1. Kafka server startup
+2. Streams processor running
+3. Prediction consumer running
+4. Dataset producer sending live records
+5. Real-time predictions appearing
+
+---
+
+# Conclusion
 
 This project successfully demonstrates a complete real-time machine learning streaming pipeline using Apache Kafka and Kafka Streams.
 
