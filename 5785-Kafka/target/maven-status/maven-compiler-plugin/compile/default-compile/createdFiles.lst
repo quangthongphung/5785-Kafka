@@ -1,0 +1,5 @@
+com\example\StreamsProcessor.class
+com\example\PredictionConsumer.class
+com\example\TrainModel.class
+com\example\DatasetProducer.class
+com\example\App.class
