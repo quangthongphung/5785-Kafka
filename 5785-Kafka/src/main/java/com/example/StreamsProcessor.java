@@ -33,7 +33,7 @@ public class StreamsProcessor {
 
         props.put(
                 StreamsConfig.APPLICATION_ID_CONFIG,
-                "bike-prediction-app-final-1"
+                "bike-prediction-app-final-4"
         );
 
         props.put(

@@ -45,6 +45,30 @@ public class TrainModel {
 
         LinearRegression model = new LinearRegression();
         model.buildClassifier(data);
+        weka.classifiers.Evaluation eval =
+        new weka.classifiers.Evaluation(data);
+
+eval.crossValidateModel(
+        model,
+        data,
+        5,
+        new java.util.Random(1)
+);
+
+System.out.println(
+        "Correlation: "
+                + eval.correlationCoefficient()
+);
+
+System.out.println(
+        "MAE: "
+                + eval.meanAbsoluteError()
+);
+
+System.out.println(
+        "RMSE: "
+                + eval.rootMeanSquaredError()
+);
 
         weka.core.SerializationHelper.write("model/bike-model.model", model);
 
