@@ -266,7 +266,7 @@ Video Demo
 
 Add your YouTube / Google Drive / OneDrive video link here.
 
-The demo video shows:
+The demo video shows: https://drive.google.com/file/d/16wqGeg_AmZUSmnNYKDbOQldLUcI-dbvU/view?usp=sharing
 
 Kafka server startup
 Streams processor running
