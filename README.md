@@ -100,7 +100,10 @@ If Maven is not added to PATH:
 Expected output:
 
 BUILD SUCCESS
-STEP 2 — Train the Machine Learning Model
+
+---
+
+# STEP 2 — Train the Machine Learning Model
 
 Run TrainModel.java:
 
@@ -263,8 +266,6 @@ RMSE
 F1-score is commonly used for classification tasks, while this project predicts a continuous numeric value.
 
 Video Demo
-
-Add your YouTube / Google Drive / OneDrive video link here.
 
 The demo video shows: https://drive.google.com/file/d/16wqGeg_AmZUSmnNYKDbOQldLUcI-dbvU/view?usp=sharing
 
